@@ -76,6 +76,11 @@ public class ShellService {
         contactService.save(new Contact(firstName, lastName, phone, birthday));
     }
 
+    @ShellMethod(key = "delete", value = "Delete contact.", prefix = "")
+    public void deleteContact(@NotNull Long id) throws IOException {
+        contactService.delete(id);
+    }
+
     @ShellMethod(key = "file", value = "Show json filename used in app.")
     public String getFilename() {
         return contactService.getFilename();
@@ -106,5 +111,4 @@ public class ShellService {
 
         return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
     }
-//    add first-name Колян last-name Топорков phone 9996338528 birthday 2018-01-02
 }
