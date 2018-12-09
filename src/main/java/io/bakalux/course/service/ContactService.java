@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -91,9 +90,30 @@ public class ContactService {
 
     public void update(Contact newContact) throws IOException {
         Long id = newContact.getId();
-        List<Contact> updatedList = findAll()
+
+        List<Contact> contacts = findAll();
+
+        if (contacts.stream().noneMatch(contact -> contact.getId().equals(id))) {
+            throw new RuntimeException("There is no contact with id = " + id);
+        }
+
+        List<Contact> updatedList = contacts
                 .stream()
                 .map(oldContact -> oldContact.getId().equals(id) ? newContact : oldContact)
+                .collect(Collectors.toList());
+        save(updatedList);
+    }
+
+    public void delete(Long id) throws IOException {
+        List<Contact> contacts = findAll();
+
+        if (contacts.stream().noneMatch(contact -> contact.getId().equals(id))) {
+            throw new RuntimeException("There is no contact with id = " + id);
+        }
+
+        List<Contact> updatedList = contacts
+                .stream()
+                .filter(contact -> !contact.getId().equals(id))
                 .collect(Collectors.toList());
         save(updatedList);
     }
